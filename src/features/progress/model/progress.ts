@@ -15,12 +15,14 @@ export function useProgress(
   const bookmarks = ref<Bookmark[]>(saved?.bookmarks ?? []),
     status = ref("本地自动保存已开启"),
     metrics = computed(() => readingMetrics(doc.value, location.value));
-  function save() {
-    status.value = writeSession({
+  function save(): boolean {
+    const result = writeSession({
       document: doc.value,
       location: location.value,
       bookmarks: bookmarks.value,
     });
+    status.value = result.message;
+    return result.ok;
   }
   watch([doc, location, bookmarks], save, { deep: true });
   function add() {

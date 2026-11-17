@@ -89,8 +89,21 @@ function focus(id: string) {
         /><LibraryPanel
           :busy="l.busy.value"
           :message="l.message.value"
-          @import="l.importFiles"
+          :task="l.task.value"
+          :file-request="l.fileRequest.value"
+          :quota-bytes="l.quotaBytes.value"
+          @import="l.beginImport"
+          @provide="l.provideFiles"
           @reset="l.reset"
+          @start="l.start"
+          @pause="l.pause"
+          @resume="l.resume"
+          @retry="l.retry"
+          @confirm="l.confirm"
+          @export="l.exportDone"
+          @discard="l.discard"
+          @mode="l.setMode"
+          @reorder="l.reorder"
         />
         <div class="sidebar-footer">
           <PanelLeftClose :size="14" /> 你的私人漫画放映室 <span>v1.0</span>

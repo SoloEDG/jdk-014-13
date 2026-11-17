@@ -10,9 +10,17 @@ export function useWorkspace() {
     reader = useReader(doc);
   if (saved) reader.dispatch({ type: "restore", location: saved.location });
   const progress = useProgress(doc, reader.location, saved),
-    library = useLibrary(doc, (id) => {
-      reader.dispatch({ type: "chapter", id });
-      progress.reconcile();
+    library = useLibrary(doc, {
+      persist: () => progress.save(),
+      onCommitted: () => {
+        reader.reconcile();
+        progress.reconcile();
+      },
+      onReset: () => {
+        const first = doc.value.chapters[0];
+        if (first) reader.dispatch({ type: "chapter", id: first.id });
+        progress.reconcile();
+      },
     }),
     chapters = useChapters(doc, () => {
       reader.reconcile();
